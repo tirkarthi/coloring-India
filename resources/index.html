@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+	<title>Indian districts map</title>
+	<script src=".js/d3min.js"></script>
+	<style type="text/css">
+         /* No style rules here yet */
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+
+	 // Code from : https://stackoverflow.com/questions/18425440/displaying-map-using-d3-js-and-geojson
+
+	 //Width and height
+	 var w = 960;
+	 var h = 600;
+
+	 var results = {
+	     "ARIYALUR": "red",
+	     "CHENNAI": "red",
+	     "COIMBATORE": "red",
+	     "CUDDALORE": "green",
+	     "DHARMAPURI": "blue",
+	     "DINDIGUL": "blue",
+	     "ERODE": "green",
+	     "KANCHEEPURAM": "green",
+	     "KANNIYAKUMARI": "red",
+	     "KARUR": "red",
+	     "MADURAI": "red",
+	     "NAMAKKAL": "blue",
+	     "NILGIRIS": "blue",
+	     "PERAMBALUR": "blue",
+	     "PUDUKKOTTAI": "red",
+	     "SALEM": "pink",
+	     "SIVAGANGA": "blue",
+	     "THANJAVUR": "blue",
+	     "THENI": "green",
+	     "THIRUVALLUR": "blue",
+	     "THIRUVARUR": "red",
+	     "THOOTHUKUDI": "red",
+	     "TIRUCHCHIRAPPALLI": "green",
+	     "TIRUNELVELI_KATTABO": "green",
+	     "TIRUVANNAMALAI": "pink",
+	     "VELLORE": "red",
+	     "VILLUPURAM": "red",
+	     "VIRUDHUNAGAR": "pink",
+
+	     // assam
+	     "SONITPUR":"blue","KOKRAJHAR":"pink","MARIGAON":"pink","BARPETA":"sandybrown","HAILAKANDI":"sandybrown","CACHAR":"blue","LAKHIMPUR":"sandybrown","NAGAON":"sandybrown","JORHAT":"blue","GOALPARA":"pink","KARIMGANJ":"pink","SIBSAGAR":"sandybrown","KAMRUP":"blue","TINSUKIA":"sandybrown","DHEMAJI":"blue","DIBRUGARH":"pink","NALBARI":"pink","DHUBURI":"sandybrown","GOLAGHAT":"pink","NORTH_CACHAR_HILLS":"pink","BONGAIGAON":"blue","DARRANG":"sandybrown",
+
+	     // manipur
+	     "BISHNUPUR":"LightSeaGreen","CHANDEL":"Indigo","CHURACHANDPUR":"OliveDrab","SENAPATI":"Goldenrod","TAMENGLONG":"LightSeaGreen","THOUBAL":"Chartreuse","UKHRUL":"LightSeaGreen","WEST_IMPHAL":"OliveDrab",
+
+	     // West bengal
+	     "UTTAR_DINAJPUR":"Chartreuse","MALDAH":"DarkSlateGray","NADIA":"red","HAORA":"DarkSlateGray","JALPAIGURI":"Chartreuse","DARJILING":"DarkSlateGray","BANKURA":"red","BIRBHUM":"Chartreuse","PURULIYA":"Chartreuse","WEST_MIDNAPORE":"Fuchsia","HUGLI":"Chartreuse","DAKSHIN_DINAJPUR":"red","BARDDHAMAN":"DarkSlateGray","KOLKATA":"Chartreuse","MURSHIDABAD":"Fuchsia","KOCHBIHAR":"DarkSlateGray",
+
+	     "AIZAWL": "DarkSlateGray",
+	     "ALAPPUZHA": "Indigo",
+	     "ALMORA": "LightSeaGreen",
+	     "AMBALA": "orchid",
+	     "AMRITSAR": "OliveDrab",
+	     "ANANTNAG_KASHMIR_SOUTH": "Chartreuse",
+	     "ANDAMAN_AND_NICOBAR": "yellow",
+	     "BAGDAM": "red",
+	     "BAGESHWAR": "DimGray",
+	     "BARAMULA_KASHMIR_NORTH": "DarkSlateGray",
+	     "BATHINDA": "blue",
+	     "BHIWANI": "DarkOrange",
+	     "BILASPUR": "orchid",
+	     "BISHNUPUR": "Tomato",
+	     "CHAMBA": "LightSeaGreen",
+	     "CHAMOLI": "DarkSlateGray",
+	     "CHAMPAWAT": "DimGray",
+	     "CHAMPHAI": "LightSeaGreen",
+	     "CHANDEL": "sandybrown",
+	     "CHANDIGARH": "yellow",
+	     "CHANGLANG": "orchid",
+	     "CHURACHANDPUR": "YellowGreen",
+	     "DADRA_AND_NAGAR_HAVELI": "yellow",
+	     "DAMAN_AND_DIU": "yellow",
+	     "DEHRA_DUN": "DarkSlateGray",
+	     "DELHI": "yellow",
+	     "DHALAI": "Brown",
+	     "DIMAPUR": "Goldenrod",
+	     "DODA": "DarkSlateGray",
+	     "EAST": "Goldenrod",
+	     "EAST_GARO_HILLS": "OliveDrab",
+	     "EAST_KAMENG": "orchid",
+	     "EAST_KHASI_HILLS": "OliveDrab",
+	     "EAST_SIANG": "Brown",
+	     "FARIDABAD": "DarkOrange",
+	     "FARIDKOT": "OliveDrab",
+	     "FATEHABAD": "orchid",
+	     "FATEHGARH_SAHIB": "YellowGreen",
+	     "FIROZPUR": "blue",
+	     "GURDASPUR": "YellowGreen",
+	     "GURGAON": "orchid",
+	     "HAMIRPUR": "LightSeaGreen",
+	     "HARIDWAR": "LightSeaGreen",
+	     "HISAR": "OliveDrab",
+	     "HOSHIARPUR": "blue",
+	     "IDUKKI": "Indigo",
+	     "JAINTIA_HILLS": "DimGray",
+	     "JALANDHAR": "OliveDrab",
+	     "JAMMU": "Chartreuse",
+	     "JHAJJAR": "OliveDrab",
+	     "JIND": "blue",
+	     "KAITHAL": "orchid",
+	     "KANGRA": "orchid",
+	     "KANNUR": "YellowGreen",
+	     "KARGIL": "red",
+	     "KARNAL": "DarkOrange",
+	     "KASARAGOD": "Indigo",
+	     "KATHUA": "DarkSlateGray",
+	     "KINNAUR": "orchid",
+	     "KOHIMA": "orchid",
+	     "KOLASIB": "LightSeaGreen",
+	     "KOLLAM": "YellowGreen",
+	     "KOTTAYAM": "YellowGreen",
+	     "KOZHIKODE": "Indigo",
+	     "KULLU": "blue",
+	     "KUPWARA_MUZAFFARABAD": "DimGray",
+	     "KURUKSHETRA": "OliveDrab",
+	     "KURUNG_KUMEY": "Goldenrod",
+	     "LADAKH_LEH": "DarkSlateGray",
+	     "LAHUL_AND_SPITI": "pink",
+	     "LAWNGTLAI": "DarkSlateGray",
+	     "LOHIT": "Brown",
+	     "LOWER_DIBANG_VALLEY": "Goldenrod",
+	     "LOWER_SUBANSIRI": "orchid",
+	     "LUDHIANA": "blue",
+	     "LUNGLEI": "LightSeaGreen",
+	     "MAHENDRAGARH": "orchid",
+	     "MALAPPURAM": "YellowGreen",
+	     "MAMIT": "pink",
+	     "MANDI": "pink",
+	     "MANSA": "YellowGreen",
+	     "MOGA": "YellowGreen",
+	     "MOKOKCHUNG": "orchid",
+	     "MON": "orchid",
+	     "MUKTSAR": "YellowGreen",
+	     "NAINI_TAL": "DarkSlateGray",
+	     "NAWAN_SHEHAR": "YellowGreen",
+	     "NORTH_GOA": "Brown",
+	     "NORTH_SIKKIM": "orchid",
+	     "NORTH_TRIPURA": "DimGray",
+	     "PALAKKAD": "Indigo",
+	     "PANCHKULA": "DarkOrange",
+	     "PANIPAT": "orchid",
+	     "PAPUM_PARE": "Brown",
+	     "PATIALA": "blue",
+	     "PATTANAMTITTA": "Fuchsia",
+	     "PAURI_GARHWAL": "DimGray",
+	     "PHEK": "Chartreuse",
+	     "PITHORAGARH": "sandybrown",
+	     "PUDUCHERRY": "yellow",
+	     "PULWAMA": "DarkSlateGray",
+	     "PUNCH": "DimGray",
+	     "RAJAURI": "DarkSlateGray",
+	     "REWARI": "DarkOrange",
+	     "RI-BHOI": "sandybrown",
+	     "ROHTAK": "orchid",
+	     "RUDRA_PRAYAG": "LightSeaGreen",
+	     "RUPNAGAR": "OliveDrab",
+	     "SAIHA": "pink",
+	     "SANGRUR": "OliveDrab",
+	     "SENAPATI": "orchid",
+	     "SERCHHIP": "pink",
+	     "SHIMLA": "LightSeaGreen",
+	     "SIRMAUR": "orchid",
+	     "SIRSA": "DarkOrange",
+	     "SOLAN": "blue",
+	     "SONEPAT": "DarkOrange",
+	     "SOUTH_GARO_HILLS": "sandybrown",
+	     "SOUTH_GOA": "blue",
+	     "SOUTH_SIKKIM": "DarkSlateGray",
+	     "SOUTH_TRIPURA": "DimGray",
+	     "SRINAGAR": "DimGray",
+	     "TAMENGLONG": "Tomato",
+	     "TAWANG": "orchid",
+	     "TEHRI_GARHWAL": "sandybrown",
+	     "THIRUVANANTHAPURAM": "Indigo",
+	     "THOUBAL": "Chartreuse",
+	     "THRISSUR": "Fuchsia",
+	     "TIRAP": "Brown",
+	     "TUENSANG": "Indigo",
+	     "UDHAMPUR": "DimGray",
+	     "UDHAM_SINGH_NAGAR": "LightSeaGreen",
+	     "UKHRUL": "Tomato",
+	     "UNA": "blue",
+	     "UPPER_DIBANG_VALLEY": "Brown",
+	     "UPPER_SIANG": "orchid",
+	     "UPPER_SUBANSIRI": "Brown",
+	     "UTTARKASHI": "DimGray",
+	     "WAYANAD": "Fuchsia",
+	     "WEST_GARO_HILLS": "DimGray",
+	     "WEST_IMPHAL": "YellowGreen",
+	     "WEST_KAMENG": "Brown",
+	     "WEST_KHASI_HILLS": "DimGray",
+	     "WEST_SIANG": "Goldenrod",
+	     "WEST_SIKKIM": "Goldenrod",
+	     "WEST_TRIPURA": "Indigo",
+	     "WOKHA": "Chartreuse",
+	     "YAMUNA_NAGAR": "DarkOrange",
+	     "ZUNHEBOTO": "Goldenrod"
+
+	 };
+
+	 //Define map projection
+	 var projection = d3.geo.mercator()
+			    .translate([w/2, h/2])
+			    .scale(600);
+
+	 //Define path generator
+	 var path = d3.geo.path()
+                      .projection(projection);
+
+	 //Create SVG element
+	 var svg = d3.select("body")
+                     .append("svg")
+                     .attr("width", w)
+                     .attr("height", h)
+		     .call(d3.behavior.zoom().on("zoom", function () {
+			 svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")}));
+
+	 //Load in GeoJSON data
+	 d3.json("data/india_district.json", function(json) {
+
+             //Bind data and create one path per GeoJSON feature
+             svg.selectAll("path")
+		.data(json.features)
+                .enter()
+                .append("path")
+                .attr("d", path)
+		.style("stroke", "black")
+	        .style("stroke-width", 0.1)
+                .style("fill", function (d) {
+		    var key = d.properties["NAME_2"].toUpperCase().replace(/\s+/g, '_');
+		    console.log(key);
+		    console.log(results[key]);
+		    return results[key] ? results[key] : "yellow"
+		})
+	     	.attr("transform", "translate(-800,300)");
+	 });
+
+        </script>
+    </body>
+</html>
